@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What We Didn't Know — Sessions that build connection</title>
+<meta name="description" content="Sessions where people share, listen, and notice — in pairs, then in groups. Connection first. Collaboration follows.">
+<style>
+  :root {
+    --ink: #1c1b19;
+    --ink-soft: #4a4742;
+    --paper: #f7f4ee;
+    --paper-warm: #efe9df;
+    --accent: #8a5a3b;      /* warm terracotta — human, not corporate */
+    --accent-soft: #c9a98d;
+    --line: #ddd5c7;
+    --maxw: 720px;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(247, 244, 238, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .nav-brand {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-brand span { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    font-family: var(--sans);
+    font-size: 14px;
+    letter-spacing: 0.03em;
+    text-transform: lowercase;
+  }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s, color 0.25s;
+  }
+  .nav-links a:hover { color: var(--accent); border-bottom-color: var(--accent-soft); }
+  @media (max-width: 620px) {
+    .nav-links { display: none; }
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  section { padding: 64px 0; }
+  section + section { border-top: 1px solid var(--line); }
+
+  h1, h2, h3 { font-weight: 400; line-height: 1.15; margin: 0 0 0.5em; }
+
+  /* ---------- HERO ---------- */
+  .hero { padding: 96px 0 72px; text-align: center; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 7vw, 4.4rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3em;
+  }
+  .hero h1 .amp { color: var(--accent); font-style: italic; }
+  .hero .tagline {
+    font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+    color: var(--ink-soft);
+    max-width: 520px;
+    margin: 0 auto 2.4em;
+  }
+  .kicker {
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.4em;
+  }
+
+  /* "pair" motif — two dots that drift together */
+  .pair {
+    display: inline-flex;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .pair i {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent-soft);
+    display: inline-block;
+    animation: drift 5s ease-in-out infinite;
+  }
+  .pair i:last-child { animation-delay: 1.2s; }
+  @keyframes drift {
+    0%, 100% { transform: translateX(0); opacity: 0.6; }
+    50% { transform: translateX(6px); opacity: 1; }
+  }
+
+  .hero .promise {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 2.6em;
+  }
+
+  /* ---------- STORY ---------- */
+  .story { background: var(--paper-warm); border-radius: 4px; padding: 56px 0; }
+  .story .big {
+    font-size: clamp(1.5rem, 3.6vw, 2.1rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .story .big em { color: var(--accent); font-style: italic; }
+  .story .attrib {
+    margin-top: 1.6em;
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps { list-style: none; padding: 0; margin: 2em 0 0; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 0 0 1.8em 58px;
+    border-left: 1px solid var(--line);
+    margin-left: 18px;
+  }
+  .steps li:last-child { border-left-color: transparent; padding-bottom: 0; }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: -18px; top: -2px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--accent-soft);
+    color: var(--accent);
+    font-family: var(--sans);
+    font-size: 14px;
+    display: grid; place-items: center;
+  }
+  .steps h3 { font-size: 1.18rem; margin-bottom: 0.25em; }
+  .steps p { margin: 0; color: var(--ink-soft); font-size: 0.98rem; }
+
+  .logistics {
+    margin-top: 2.6em;
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    padding-top: 1.6em;
+  }
+  .logistics strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- INFLUENCES ---------- */
+  .influences p { color: var(--ink-soft); }
+  .influences .names { color: var(--ink); font-style: italic; }
+
+  /* ---------- WON'T / WILL ---------- */
+  .boundaries { display: grid; gap: 40px; }
+  @media (min-width: 700px) { .boundaries { grid-template-columns: 1fr 1fr; gap: 56px; } }
+  .boundaries h2 { font-size: 1.3rem; margin-bottom: 1em; }
+  .boundaries ul { list-style: none; padding: 0; margin: 0; }
+  .boundaries li {
+    padding: 0.5em 0 0.5em 1.6em;
+    position: relative;
+    font-size: 1rem;
+    color: var(--ink-soft);
+  }
+  .won't li::before { content: "—"; position: absolute; left: 0; color: var(--accent-soft); }
+  .will li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-size: 0.85em; top: 0.72em; }
+
+  /* ---------- CTA ---------- */
+  .cta { text-align: center; padding: 88px 0; background: var(--ink); color: var(--paper); }
+  .cta h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--paper);
+    max-width: 620px;
+    margin: 0 auto 0.4em;
+  }
+  .cta p { color: var(--accent-soft); max-width: 520px; margin: 0 auto 2.2em; font-size: 1rem; }
+  .btn {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    padding: 16px 34px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.25s, color 0.25s;
+    background: var(--accent);
+    color: var(--paper);
+  }
+  .btn:hover { background: var(--accent-soft); color: var(--ink); transform: translateY(-2px); }
+  .contact-line {
+    margin-top: 2.2em;
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--accent-soft);
+  }
+  .contact-line a { color: var(--accent-soft); text-decoration: none; border-bottom: 1px solid transparent; }
+  .contact-line a:hover { border-bottom-color: var(--accent-soft); }
+
+  /* ---------- FOOTER / BIO ---------- */
+  .footer { padding: 56px 0; }
+  .bio {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    max-width: 560px;
+    margin: 0 auto;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .bio .headshot {
+    flex: 0 0 72px;
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    display: grid; place-items: center;
+    font-size: 11px;
+    color: var(--accent-soft);
+    text-align: center;
+  }
+
+  /* ---------- NOTICING PROMPT (JS) ---------- */
+  .noticing {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 60;
+    max-width: 260px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 16px 18px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+    transform: translateY(140%);
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .noticing.show { transform: translateY(0); }
+  .noticing button {
+    position: absolute; top: 8px; right: 10px;
+    background: none; border: none; color: var(--accent-soft);
+    cursor: pointer; font-size: 15px; line-height: 1; padding: 4px;
+  }
+  .noticing .prompt { color: var(--accent-soft); font-style: italic; margin-top: 6px; display: block; }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pair i { animation: none; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">What We <span>Didn't</span> Know</a>
+    <div class="nav-links">
+      <a href="#story">the story</a>
+      <a href="#room">in the room</a>
+      <a href="#approach">approach</a>
+      <a href="#fit">fit</a>
+      <a href="#contact">get in touch</a>
+    </div>
+  </div>
+</nav>
+
+<header id="top" class="hero wrap">
+  <div class="pair" aria-hidden="true"><i></i><i></i></div>
+  <div class="kicker">Sessions that build connection</div>
+  <h1>What We <span class="amp">Didn't</span> Know</h1>
+  <p class="tagline">
+    I run sessions where people share, listen, and notice — in pairs, then in groups.
+    Connection first. Collaboration follows.
+  </p>
+  <p class="promise">
+    People learn things about each other<br>they wouldn't have found out otherwise.
+  </p>
+</header>
+
+<section id="story" class="story reveal">
+  <div class="wrap">
+    <div class="kicker">The story I keep coming back to</div>
+    <p class="big">
+      I ran a session for 30 people at my own organization. By the end, the room felt like they
+      <em>really knew each other</em> — not "we did an icebreaker" knew each other, but knew each other.
+      People learned things about each other they never would have found out otherwise.
+    </p>
+    <p class="attrib">That's the whole point.</p>
+  </div>
+</section>
+
+<section id="room" class="wrap reveal">
+  <div class="kicker">What happens in the room</div>
+  <h2>Simple on purpose.</h2>
+  <ol class="steps">
+    <li>
+      <h3>Pairs</h3>
+      <p>People partner up and share. Listening is the work.</p>
+    </li>
+    <li>
+      <h3>Noticing</h3>
+      <p>We stop and ask: what did you notice? In your partner, in yourself, in the room?</p>
+    </li>
+    <li>
+      <h3>Groups</h3>
+      <p>We bring it back to the whole room — what we heard, what surprised us, what we didn't know.</p>
+    </li>
+    <li>
+      <h3>Repeat</h3>
+      <p>Each round goes a little deeper, because trust is already there.</p>
+    </li>
+  </ol>
+  <p class="logistics">
+    Sessions run from <strong>90 minutes to a half-day</strong>, and can be woven into a larger event.
+    Worked with groups up to <strong>30</strong>; comfortable up to <strong>100</strong>.
+    I travel, and I facilitate online.
+  </p>
+</section>
+
+<section id="approach" class="wrap influences reveal">
+  <div class="kicker">What I'm drawing on</div>
+  <p>
+    I'm a <strong>Certified Interplay Leader</strong>. My work is informed by Interplay's ideas about story and play,
+    <span class="names">Tim Gallwey's <em>Inner Game</em></span> approach to noticing what's actually happening,
+    and <span class="names">Peter Block's</span> thinking on community and belonging.
+  </p>
+  <p>
+    I hold these ideas proudly — and I hold them loosely. The session is not a lecture about any of them.
+    It's an experience of them.
+  </p>
+</section>
+
+<section id="fit" class="wrap reveal">
+  <div class="kicker">Where I fit</div>
+  <div class="boundaries">
+    <div class="won't">
+      <h2>What I won't do</h2>
+      <ul>
+        <li>Forced fun</li>
+        <li>Icebreaker entertainment</li>
+        <li>Wellness days</li>
+      </ul>
+      <p style="font-size:0.95rem; color:var(--ink-soft); margin-top:1em;">
+        If that's what the event needs, I'm not the right fit — and I'll tell you so.
+      </p>
+    </div>
+    <div class="will">
+      <h2>What I will do</h2>
+      <ul>
+        <li>Work as a contributor, breakout lead, or the person running the whole thing</li>
+        <li>Sit comfortably alongside other facilitators</li>
+        <li>Be honest about whether what I do fits what your client needs</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="cta">
+  <div class="wrap">
+    <div class="kicker" style="color:var(--accent-soft);">Let's talk</div>
+    <h2>Tell me about your event — I'll tell you if I'm the right fit.</h2>
+    <p>No pitch. A conversation about what your client actually needs.</p>
+    <a class="btn" href="mailto:hello@example.com?subject=Tell%20me%20about%20your%20event">Tell me about your event</a>
+    <div class="contact-line">
+      <a href="mailto:hello@example.com">hello@example.com</a> &nbsp;·&nbsp; <a href="tel:+10000000000">[phone]</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer wrap">
+  <div class="bio">
+    <div class="headshot" aria-hidden="true">headshot</div>
+    <div>
+      <strong style="color:var(--ink);">[Name]</strong> — Certified Interplay Leader. Bio coming soon.
+    </div>
+  </div>
+</footer>
+
+<!-- Noticing prompt: a gentle, dismissible nudge that echoes the session's core move -->
+<div class="noticing" id="noticing" role="status" aria-live="polite">
+  <button aria-label="Dismiss" onclick="document.getElementById('noticing').classList.remove('show')">×</button>
+  <div>Before you go —</div>
+  <span class="prompt" id="promptText">What did you notice?</span>
+</div>
+
+<script>
+  // --- Reveal sections on scroll (soft, quiet) ---
+  const reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+  } else {
+    reveals.forEach(el => el.classList.add('in'));
+  }
+
+  // --- Noticing prompt appears after the visitor has read a while ---
+  const noticing = document.getElementById('noticing');
+  const promptText = document.getElementById('promptText');
+  const prompts = [
+    'What did you notice?',
+    'What did you notice — in yourself?',
+    'What did you notice — in the room?',
+    'What didn’t you know before you got here?'
+  ];
+  let pIndex = 0;
+  let shown = false;
+
+  function showNoticing() {
+    if (shown) return;
+    shown = true;
+    promptText.textContent = prompts[pIndex % prompts.length];
+    noticing.classList.add('show');
+    // rotate the prompt slowly while visible
+    const rot = setInterval(() => {
+      if (!noticing.classList.contains('show')) { clearInterval(rot); return; }
+      pIndex++;
+      promptText.textContent = prompts[pIndex % prompts.length];
+    }, 5000);
+  }
+
+  // Trigger once the visitor has scrolled past the story (they've read something real)
+  const story = document.getElementById('story');
+  if ('IntersectionObserver' in window && story) {
+    const so = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          setTimeout(showNoticing, 3500);
+          so.unobserve(story);
+        }
+      });
+    }, { threshold: 0.4 });
+    so.observe(story);
+  }
+
+  // --- Smooth anchor offset for sticky nav ---
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (ev) => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const target = document.querySelector(id);
+        if (target) {
+          ev.preventDefault();
+          const y = target.getBoundingClientRect().top + window.pageYOffset - 64;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>
